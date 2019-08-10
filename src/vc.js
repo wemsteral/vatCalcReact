@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import NumericInput from "react-numeric-input";
 
-const TaxRates = {
+const taxRates = {
   Uk: 0.2,
   France: 0.2,
   Switzerland: 0.08,
@@ -13,7 +13,7 @@ const TaxRates = {
   Turkey: 0.18
 };
 
-const Currencies = {
+const currencies = {
   Uk: "£ ",
   France: "€ ",
   Switzerland: "CHF ",
@@ -29,49 +29,58 @@ class VatCalculator extends Component {
   constructor() {
     super();
     this.state = {
-      entry1: 0,
-      entry2: 0,
-      netTotal: 0
+      entry1: 0.0,
+      entry2: 0.0,
+      netTotal: 0.0,
+      vatTotal: 0.0,
+      grandTotal: 0.0
     };
-    this.handleChange1 = this.handleChange1.bind(this);
-    this.handleChange2 = this.handleChange2.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   calcTotal() {
-    return parseInt(this.state.entry1) + parseInt(this.state.entry2);
+    return parseFloat(this.state.entry1) + parseFloat(this.state.entry2);
   }
 
-  handleChange1(event) {
-    this.setState({ entry1: event.target.value });
+  calcVat() {
+    return this.calcTotal() * taxRates["Uk"];
   }
 
-  handleChange2(event) {
-    this.setState({ entry2: event.target.value });
+  calcGrand() {
+    return this.calcTotal() + this.calcVat();
   }
 
   handleSubmit(event) {
-    this.setState({ netTotal: this.calcTotal() });
+    this.setState({
+      netTotal: this.calcTotal(),
+      vatTotal: this.calcVat(),
+      grandTotal: this.calcGrand()
+    });
     event.preventDefault();
   }
 
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <h1>{this.state.netTotal}</h1>
+        <h1>
+          Total: <text>{currencies["Turkey"]}</text>
+          {this.state.netTotal.toFixed(2)}
+        </h1>
+        <h1>Tax: £{this.state.vatTotal.toFixed(2)}</h1>
+        <h1>Grand Total: £{this.state.grandTotal.toFixed(2)}</h1>
         <label>
           Name:
           <NumericInput
             step={0.1}
             precision={2}
             value={this.state.entry1}
-            onChange={e => this.handleChange1(e)}
+            onChange={i => this.setState({ entry1: i })}
           />
           <NumericInput
             step={0.1}
             precision={2}
             value={this.state.entry2}
-            onChange={e => this.handleChange2(e)}
+            onChange={i => this.setState({ entry2: i })}
           />
         </label>
         <input type="submit" value="Submit" />
