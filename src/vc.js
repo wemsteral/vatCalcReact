@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import NumericInput from "react-numeric-input";
+import Select from "react-select";
 
 const taxRates = {
   Uk: 0.2,
@@ -25,6 +26,18 @@ const currencies = {
   Turkey: "₺ "
 };
 
+const taxRates1 = [
+  { label: "UK", value: 0.2 },
+  { label: "France", value: 0.2 },
+  { label: "Switzerland", value: 0.08 },
+  { label: "Germany", value: 0.19 },
+  { label: "Greece", value: 0.24 },
+  { label: "Ireland", value: 0.23 },
+  { label: "Italy", value: 0.22 },
+  { label: "Norway", value: 0.25 },
+  { label: "Turkey", value: 0.18 }
+];
+
 class VatCalculator extends Component {
   constructor() {
     super();
@@ -33,7 +46,9 @@ class VatCalculator extends Component {
       entry2: 0.0,
       netTotal: 0.0,
       vatTotal: 0.0,
-      grandTotal: 0.0
+      grandTotal: 0.0,
+      currency: "£ ",
+      taxRate: 0.2
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -43,7 +58,7 @@ class VatCalculator extends Component {
   }
 
   calcVat() {
-    return this.calcTotal() * taxRates["Uk"];
+    return this.calcTotal() * this.state.taxRate;
   }
 
   calcGrand() {
@@ -59,13 +74,19 @@ class VatCalculator extends Component {
     event.preventDefault();
   }
 
+  selectChange(event) {
+    this.setState({
+      taxRate: event["value"],
+      netTotal: this.calcTotal(),
+      vatTotal: this.calcVat(),
+      grandTotal: this.calcGrand()
+    });
+  }
+
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <h1>
-          Total: <text>{currencies["Turkey"]}</text>
-          {this.state.netTotal.toFixed(2)}
-        </h1>
+        <h1>Total: £{this.state.netTotal.toFixed(2)}</h1>
         <h1>Tax: £{this.state.vatTotal.toFixed(2)}</h1>
         <h1>Grand Total: £{this.state.grandTotal.toFixed(2)}</h1>
         <label>
@@ -84,6 +105,11 @@ class VatCalculator extends Component {
           />
         </label>
         <input type="submit" value="Submit" />
+        <Select
+          options={taxRates1}
+          placeholder="UK"
+          onChange={i => this.setState({ taxRate: i["value"] })}
+        />
       </form>
     );
   }
