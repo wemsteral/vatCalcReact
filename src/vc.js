@@ -2,20 +2,8 @@ import React, { Component } from "react";
 import NumericInput from "react-numeric-input";
 import Select from "react-select";
 
-const taxRates = {
-  Uk: 0.2,
-  France: 0.2,
-  Switzerland: 0.08,
-  Germany: 0.19,
-  Greece: 0.24,
-  Ireland: 0.23,
-  Italy: 0.22,
-  Norway: 0.25,
-  Turkey: 0.18
-};
-
 const currencies = {
-  Uk: "£ ",
+  UK: "£ ",
   France: "€ ",
   Switzerland: "CHF ",
   Germany: "€ ",
@@ -26,7 +14,7 @@ const currencies = {
   Turkey: "₺ "
 };
 
-const taxRates1 = [
+const taxRates = [
   { label: "UK", value: 0.2 },
   { label: "France", value: 0.2 },
   { label: "Switzerland", value: 0.08 },
@@ -51,6 +39,8 @@ class VatCalculator extends Component {
       taxRate: 0.2
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.selectChange = this.selectChange.bind(this);
+    this.handleReset = this.handleReset.bind(this);
   }
 
   calcTotal() {
@@ -65,6 +55,16 @@ class VatCalculator extends Component {
     return this.calcTotal() + this.calcVat();
   }
 
+  handleReset(event) {
+    this.setState({
+      entry1: 0.0,
+      entry2: 0.0,
+      netTotal: 0.0,
+      vatTotal: 0.0,
+      grandTotal: 0.0
+    });
+  }
+
   handleSubmit(event) {
     this.setState({
       netTotal: this.calcTotal(),
@@ -74,42 +74,63 @@ class VatCalculator extends Component {
     event.preventDefault();
   }
 
+  // selectChange function seems a bit hacky - having to make a point of referring to the event to prompt an update when the dropdown changes???
+  // this was to avoid weird sync/timing issues with updates state properties being used immediately after updated in the same function ....
+  // I'm sure there's a nicer way to do it!
   selectChange(event) {
     this.setState({
       taxRate: event["value"],
-      netTotal: this.calcTotal(),
-      vatTotal: this.calcVat(),
-      grandTotal: this.calcGrand()
+      currency: currencies[event["label"]],
+      vatTotal: this.calcTotal() * event["value"],
+      grandTotal: this.calcTotal() * (1 + event["value"])
     });
   }
 
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <h1>Total: £{this.state.netTotal.toFixed(2)}</h1>
-        <h1>Tax: £{this.state.vatTotal.toFixed(2)}</h1>
-        <h1>Grand Total: £{this.state.grandTotal.toFixed(2)}</h1>
+        <h2>
+          Total: {this.state.currency}
+          {this.state.netTotal.toFixed(2)}
+        </h2>
+        <h2>
+          Tax @ {this.state.taxRate * 100}%: {this.state.currency}
+          {this.state.vatTotal.toFixed(2)}
+        </h2>
+        <h2>
+          Grand Total: {this.state.currency}
+          {this.state.grandTotal.toFixed(2)}
+        </h2>
         <label>
-          Name:
           <NumericInput
-            step={0.1}
+            min={0.0}
+            step={0.01}
             precision={2}
             value={this.state.entry1}
             onChange={i => this.setState({ entry1: i })}
           />
           <NumericInput
-            step={0.1}
+            min={0.0}
+            step={0.01}
             precision={2}
             value={this.state.entry2}
             onChange={i => this.setState({ entry2: i })}
           />
         </label>
-        <input type="submit" value="Submit" />
-        <Select
-          options={taxRates1}
-          placeholder="UK"
-          onChange={i => this.setState({ taxRate: i["value"] })}
+        <input type="submit" value="Submit" className="button" />
+        <input
+          type="button"
+          value="Reset"
+          className="button"
+          onClick={this.handleReset}
         />
+        <div style={{ width: "500px" }}>
+          <Select
+            options={taxRates}
+            placeholder="UK"
+            onChange={this.selectChange}
+          />
+        </div>
       </form>
     );
   }
