@@ -44,7 +44,7 @@ There are 3 main functions that handle events:
 `handleSubmit`
 `selectChange`
 
-I also created an object to hold all of the properties of each nations taxRate. These are called upon to change the component's state.
+I also created an object to hold all of the properties of each nation's taxRate. These are called upon to change the component's state.
 
 Finally, styling. I was fortunate to be able to get the COOK font and background colour by using the dev tools in the browser. Overall, the styling is clean and minimal. I aimed to make use of vertical space so the app can be used on smaller screens with no formatting problems.
 
