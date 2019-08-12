@@ -42,10 +42,7 @@ I also added the npm package 'react-select' for the drop down box.
 There are 3 main functions that handle events:
 `handleReset`
 `handleSubmit`
-
-```selectChange
-
-```
+`selectChange`
 
 I also created an object to hold all of the properties of each nations taxRate. These are called upon to change the component's state.
 
