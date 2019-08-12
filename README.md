@@ -4,6 +4,8 @@ A single page VAT calculator web app written in React.
 
 This is a follow on from my [original attempt using jQuery](https://github.com/wemsteral/COOKvatCalculator).
 
+![ss1](https://github.com/wemsteral/vatCalcReact/blob/master/ss1.png)
+
 # What does it do?
 
 The COOK Vat Calculator takes two values as input, and upon submission, displays the total of those two values, the amount of tax and the grand total; the former two combined.
