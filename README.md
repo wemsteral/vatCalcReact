@@ -19,23 +19,16 @@ COOK styling!
 
 Clone this repo
 
-```npm i
+````npm i
 
-```
-
-```npm start
-
-```
+npm start```
 
 or
 
 ```yarn add
 
-```
-
-```yarn start
-
-```
+yarn start
+````
 
 # Approach
 
