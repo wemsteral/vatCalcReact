@@ -2,28 +2,16 @@ import React, { Component } from "react";
 import NumericInput from "react-numeric-input";
 import Select from "react-select";
 
-const currencies = {
-  UK: "£ ",
-  France: "€ ",
-  Switzerland: "CHF ",
-  Germany: "€ ",
-  Greece: "€ ",
-  Ireland: "€ ",
-  Italy: "€ ",
-  Norway: "kr ",
-  Turkey: "₺ "
-};
-
 const taxRates = [
-  { label: "UK", value: 0.2 },
-  { label: "France", value: 0.2 },
-  { label: "Switzerland", value: 0.08 },
-  { label: "Germany", value: 0.19 },
-  { label: "Greece", value: 0.24 },
-  { label: "Ireland", value: 0.23 },
-  { label: "Italy", value: 0.22 },
-  { label: "Norway", value: 0.25 },
-  { label: "Turkey", value: 0.18 }
+  { label: "UK", value: 0.2, currency: "£" },
+  { label: "France", value: 0.2, currency: "€" },
+  { label: "Switzerland", value: 0.08, currency: "CHF" },
+  { label: "Germany", value: 0.19, currency: "€" },
+  { label: "Greece", value: 0.24, currency: "€" },
+  { label: "Ireland", value: 0.23, currency: "€" },
+  { label: "Italy", value: 0.22, currency: "€" },
+  { label: "Norway", value: 0.25, currency: "kr" },
+  { label: "Turkey", value: 0.18, currency: "₺" }
 ];
 
 class VatCalculator extends Component {
@@ -35,7 +23,7 @@ class VatCalculator extends Component {
       netTotal: 0.0,
       vatTotal: 0.0,
       grandTotal: 0.0,
-      currency: "£ ",
+      currency: "£",
       taxRate: 0.2
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -74,34 +62,33 @@ class VatCalculator extends Component {
     event.preventDefault();
   }
 
-  // selectChange function seems a bit hacky - having to make a point of referring to the event to prompt an update when the dropdown changes???
-  // this was to avoid weird sync/timing issues with updates state properties being used immediately after updated in the same function ....
-  // I'm sure there's a nicer way to do it!
   selectChange(event) {
     this.setState({
       taxRate: event["value"],
-      currency: currencies[event["label"]],
+      currency: event["currency"],
       vatTotal: this.calcTotal() * event["value"],
       grandTotal: this.calcTotal() * (1 + event["value"])
     });
+    console.log(event);
   }
 
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
         <h2>
-          Total: {this.state.currency}
+          Total: {this.state.currency + " "}
           {this.state.netTotal.toFixed(2)}
         </h2>
         <h2>
-          Tax @ {this.state.taxRate * 100}%: {this.state.currency}
+          Tax @ {this.state.taxRate * 100}%: {this.state.currency + " "}
           {this.state.vatTotal.toFixed(2)}
         </h2>
         <h2>
-          Grand Total: {this.state.currency}
+          Grand Total: {this.state.currency + " "}
           {this.state.grandTotal.toFixed(2)}
         </h2>
-        <label>
+        <label className="values">
+          Enter your values: {}
           <NumericInput
             min={0.0}
             step={0.01}
@@ -124,7 +111,7 @@ class VatCalculator extends Component {
           className="button"
           onClick={this.handleReset}
         />
-        <div style={{ width: "500px" }}>
+        <div className="select" style={{ width: "500px" }}>
           <Select
             options={taxRates}
             placeholder="UK"

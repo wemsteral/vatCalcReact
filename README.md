@@ -1,68 +1,71 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# What is it?
 
-## Available Scripts
+A single page VAT calculator web app written in React.
 
-In the project directory, you can run:
+This is a follow on from my [original attempt using jQuery](https://github.com/wemsteral/COOKvatCalculator).
 
-### `npm start`
+# What does it do?
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The COOK Vat Calculator takes two values as input, and upon submission, displays the total of those two values, the amount of tax and the grand total; the former two combined.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+Extra features:
+A reset button to make all displayed totals go to zero
+The ability to change the country in question, via drop down box.
+Changing currency symbols depending on choice of country.
+Changing visible tax rate.
+COOK styling!
 
-### `npm test`
+# How do I use it?
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Clone this repo
 
-### `npm run build`
+```npm i
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+```npm start
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
 
-### `npm run eject`
+or
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```yarn add
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```yarn start
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
 
-## Learn More
+# Approach
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+I knew that to begin with at least, the scale of this app would allow me to implement everything via a single component.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+I began with a simple app that took two inputted values and displayed the total. I was fortunate to find the npm package 'react-numeric-input' which allowed for much easier formatting and edge-case-guarding. These are visible as `NumericInput` objects in the render.
 
-### Code Splitting
+I also added the npm package 'react-select' for the drop down box.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+There are 3 main functions that handle events:
+`handleReset`
+`handleSubmit`
 
-### Analyzing the Bundle Size
+```selectChange
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+```
 
-### Making a Progressive Web App
+I also created an object to hold all of the properties of each nations taxRate. These are called upon to change the component's state.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+Finally, styling. I was fortunate to be able to get the COOK font and background colour by using the dev tools in the browser. Overall, the styling is clean and minimal. I aimed to make use of vertical space so the app can be used on smaller screens with no formatting problems.
 
-### Advanced Configuration
+# Challenges
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+As with all user-input-related apps, there were a lot of edge cases that needed guarding against:
 
-### Deployment
+Negative numbers
+Unrecognised characters
+Numbers beyond two decimal places
+No entries
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+Most of these were solved by controlling characteristics of the NumericInput objects.
 
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Another challenge was in figuring out how the external objects (`NumericInput` & `Select` ) worked. I had to read a lot of documentation and debug to figure out how they interacted with events and other objects. However, once this was understood, the virtues were clear. `NumericInput` for example, returns the value of an event automatically, so less code is needed to extract the number from the input. `Select` interacted with my taxRates object in an efficient way, to streamline the process of filling the options and returning the values.
