@@ -59,6 +59,6 @@ As with all user-input-related apps, there were a lot of edge cases that needed 
 - Numbers beyond two decimal places
 - No entries
 
-Most of these were solved by controlling characteristics of the NumericInput objects.
+These were solved by controlling characteristics of the NumericInput objects (an advantage to using react-numeric-input).
 
 Another challenge was in figuring out how the external objects (`NumericInput` & `Select` ) worked. I had to read a lot of documentation and debug to figure out how they interacted with events and other objects. However, once this was understood, the virtues were clear. `NumericInput` for example, returns the value of an event automatically, so less code is needed to extract the number from the input. `Select` interacted with my taxRates object in an efficient way, to streamline the process of filling the options and returning the values.
