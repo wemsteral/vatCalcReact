@@ -66,10 +66,10 @@ class VatCalculator extends Component {
     this.setState({
       taxRate: event["value"],
       currency: event["currency"],
+      netTotal: this.calcTotal() + (event["value"] - event["value"]),
       vatTotal: this.calcTotal() * event["value"],
       grandTotal: this.calcTotal() * (1 + event["value"])
     });
-    console.log(event);
   }
 
   render() {
@@ -87,23 +87,21 @@ class VatCalculator extends Component {
           Grand Total: {this.state.currency + " "}
           {this.state.grandTotal.toFixed(2)}
         </h2>
-        <label className="values">
-          Enter your values: {}
-          <NumericInput
-            min={0.0}
-            step={0.01}
-            precision={2}
-            value={this.state.entry1}
-            onChange={i => this.setState({ entry1: i })}
-          />
-          <NumericInput
-            min={0.0}
-            step={0.01}
-            precision={2}
-            value={this.state.entry2}
-            onChange={i => this.setState({ entry2: i })}
-          />
-        </label>
+        Enter your values: {}
+        <NumericInput
+          min={0.0}
+          step={0.01}
+          precision={2}
+          value={this.state.entry1}
+          onChange={i => this.setState({ entry1: i })}
+        />
+        <NumericInput
+          min={0.0}
+          step={0.01}
+          precision={2}
+          value={this.state.entry2}
+          onChange={i => this.setState({ entry2: i })}
+        />
         <input type="submit" value="Submit" className="button" />
         <input
           type="button"
